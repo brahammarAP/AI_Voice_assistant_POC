@@ -7,7 +7,7 @@
 </li>
 
 @code {
-    private bool isNotChatSettings = false;
+    private bool isNotChatSettings;
 
     async Task SignOut()
     {
@@ -15,6 +15,7 @@
         await cookieStore.DeleteAsync("Username");
         await cookieStore.DeleteAsync("UserId");
 
+        isNotChatSettings = false;
         navService.ToggleChatSettings(isNotChatSettings);
         navManager.NavigateTo("/");
     }
