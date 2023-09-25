@@ -1,0 +1,21 @@
+{
+  "name": "BlazorPWA",
+  "short_name": "BlazorPWA",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#03173d",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "images/AddPro_Icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "images/AddPro_Icon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ]
+}

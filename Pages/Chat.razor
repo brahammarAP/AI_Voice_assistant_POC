@@ -1,0 +1,31 @@
+@page "/chat"
+@layout NoHeaderLayout
+@inject IUserSession session;
+
+<PageTitle>Chat</PageTitle>
+
+<div class="d-flex mvh-100 overflow-hidden justify-content-center">
+
+    <ChatSideMenu />
+
+    <div class="card vh-100 col-lg-4 justify-content-center border-0 ms-md-3">    
+
+        <CardNavMenu />
+    
+        <MessageList OnMessageRecived="HandleMessages" /> 
+
+        <ChatInput />
+     
+    </div>
+</div>
+
+@code {
+    private List<Message> chatMessages;
+
+    void HandleMessages()
+        => session.CurrentChat.Prompts = chatMessages;
+
+    async Task HandleEvent()
+        => await InvokeAsync(() => StateHasChanged());
+}
+

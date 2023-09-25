@@ -1,0 +1,92 @@
+﻿@page "/chatsettings"
+@inject IUserSession session;
+@inject IChatHistoryRepository ChatHistory;
+@inject NavigationManager navManager;
+
+<PageTitle>Chat settings</PageTitle>
+
+<h3 class="settings-title text-center mt-2">Chat settings</h3>
+
+<div class="text-center mx-auto gap-2 pt-2">
+    <div class="d-flex flex-column justify-content align-content-center gap-4 mt-5 mx-auto">
+        <div class="col-12 col-md-6 justify-content-center align-content-center mx-auto" @onclick="DeleteChat">
+            <article class="card mb-3 m-auto"
+                     style="max-width: 540px">
+                <a role="button"
+                   class="text-decoration-none text-black">
+                    <div class="row g-0">
+                        <div class="col-3 d-flex align-self-center justify-content-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z" />
+                            </svg>
+                        </div>
+                        <div class="col-9">
+                            <div class="card-body">
+                                <h2 class="card-title fs-3 text-danger">
+                                    Delete
+                                </h2>                        
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </article>
+        </div>
+
+        @*@onclick="ShareChat"*@
+        <div class="col-12 col-md-6 justify-content-center align-content-center mx-auto">
+            <article class="card mb-3 m-auto"
+                     style="max-width: 540px">
+                <a role="button"
+                   class="text-decoration-none text-black">
+                    <div class="row g-0">
+                        <div class="col-3 d-flex align-self-center justify-content-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#091714" class="bi bi-envelope-fill" viewBox="0 0 16 16">
+                                <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z" />
+                            </svg>
+                        </div>
+                        <div class="col-9">
+                            <div class="card-body">
+                                <h2 class="card-title fs-3 text-danger">
+                                    Share
+                                </h2>
+                                <p>Not working</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </article>
+        </div>
+
+        <div class="col-12 col-md-6 justify-content-center align-content-center mx-auto">
+            <article class="card mb-3 m-auto"
+                     style="max-width: 540px">
+                <a role="button"
+                   class="text-decoration-none text-black">
+                    <div class="row g-0">
+                        <div class="col-3 d-flex align-self-center justify-content-center">
+                            <LikeButton />
+                        </div>
+                        <div class="col-9">
+                            <div class="card-body">
+                                <h2 class="card-title fs-3 text-danger">
+                                    Favorite
+                                </h2>
+                                <p>Your chat will not be removed until unliked</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </article>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    public async Task DeleteChat()
+    {
+        await ChatHistory.DeleteAsync(x => x.Id == session.CurrentChat.Id);
+
+        navManager.NavigateTo("/menu");
+    }
+}

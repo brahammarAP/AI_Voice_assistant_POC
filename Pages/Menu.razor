@@ -1,0 +1,145 @@
+﻿@page "/menu"
+@inject ICookieStoreAPIService cookieStore;
+@inject IUserSession session;
+@inject IChatHistoryRepository ChatHistory;
+
+<PageTitle>Meny</PageTitle>
+
+<div class="container"> 
+    <article class="row mb-5">
+        <div class="col card me-md-2 border-0" @onclick="() => StartWizard()">
+            <a role="button">
+                <div class="d-flex card-header bg-white border-0 justify-content-center">
+                    <img src="images/building.svg"
+                         class="img-fluid w-75 "
+                         alt="School logo" />
+                </div>
+                <div class="card-body">
+                    <h1 class="fs-6">
+                        Begin a captivating journey with our app! Dive into endless knowledge explorations. Discover. Grow. Start today!
+                    </h1>
+                    <div class="m-0">
+                        Start with our premade Wizards here!
+                        <span class="fs-3 fw-bold">&rarr;</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col card d-none d-md-block ms-md-2 border-0">
+            <a role="button">
+                <div class="card-body d-flex justify-content-center">
+                    <img src="images/cutecat.gif"
+                         class="card-header bg-white border-0 img-fluid"
+                         alt="Cute Cat gid" />
+                </div>
+            </a>
+        </div>
+    </article>
+
+    <div class="row mb-3">
+        <h2 class="border-start border-success border-5 rounded-1 fs-4 fw-semibold mb-3">
+            Chat History
+        </h2>
+    </div>
+
+    @if (userChatHistory == null || userChatHistory.Count() == 0)
+    {
+        <div class="row text-center text-danger mt-5">
+            <h2 class="fs-2">You have no search history yet!</h2>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2">
+            @foreach (var chat in userChatHistory)
+            {
+                @* var currentChatId = chat.Id;
+                <a href="/chat/@UserId/@chat.Id"
+                   class="menu-button btn p-1"
+                @ontouchstart="HandleTouchStart"
+                @ontouchend="@((TouchEventArgs t) => HandleTouchEnd(currentChatId, t))">@chat.Heading</a> *@
+
+                <div class="col-12 col-md-6" @onclick="() => GoToChat(chat)">
+                    <article class="card mb-3 m-auto"
+                                style="max-width: 540px">
+                        <a role="button"
+                            class="text-decoration-none text-black">
+                            <div class="row g-0">
+                                <div class="col-3 d-flex align-self-center">
+                                    <img src="@(chat.CardImage)"
+                                            class="img-fluid"
+                                            alt="Space template logo" />
+                                </div>
+                                <div class="col-9">
+                                    <div class="card-body">
+                                        <h2 class="card-title fs-3 text-danger">
+                                            @chat.CardHeading
+                                        </h2>
+                                        <p class="card-text">
+                                            @chat.Heading
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </article>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private IEnumerable<ChatHistory> userChatHistory;
+
+    // (TouchPoint ReferencePoint, DateTime StartTime) startPoint;
+
+    protected override async Task OnInitializedAsync()
+        => await GetUserHistory();
+
+    async Task GetUserHistory()
+        => userChatHistory = await ChatHistory.GetAllAsync(x => x.UserId == session.User.Id) ?? null!;
+
+    void StartWizard()
+        => navManager.NavigateTo("/promptwizard");
+
+    void GoToChat(ChatHistory selectedChat)
+    {
+        session.CurrentChat = selectedChat;
+        navManager.NavigateTo("/chat");
+    } 
+
+    // void HandleTouchStart(TouchEventArgs t)
+    // {
+    //     startPoint.ReferencePoint = t.TargetTouches[0];
+    //     startPoint.StartTime = DateTime.Now;
+    // }
+
+    // private async Task HandleTouchEnd(Guid chatId, TouchEventArgs t)
+    // {
+    //     var endReference = t.ChangedTouches[0];
+
+    //     var diffX = startPoint.ReferencePoint.ClientX - endReference.ClientX;
+    //     var diffY = startPoint.ReferencePoint.ClientY - endReference.ClientY;
+    //     var diffTime = DateTime.Now - startPoint.StartTime;
+    //     var velocityX = Math.Abs(diffX / diffTime.Milliseconds);
+    //     var velocityY = Math.Abs(diffY / diffTime.Milliseconds);
+    //     var run = Math.Abs(diffX);
+    //     var rise = Math.Abs(diffY);
+    //     var ang = Math.Atan2(run, rise) * (180/Math.PI);
+
+    //     var swipeThreshold = 0.8;
+
+    //     if (Math.Abs(velocityX - velocityY) < .5 || (velocityX < swipeThreshold && velocityY < swipeThreshold)) return;
+
+    //     if (ang > 85 && velocityX >= swipeThreshold)
+    //     {
+    //         if (diffX > 0)
+    //             await historyStorage.DeleteChatById(chatId);
+
+    //     }
+
+    //     await GetUserHistory();
+    // }
+}
+

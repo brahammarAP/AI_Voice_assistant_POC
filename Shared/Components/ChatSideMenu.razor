@@ -1,0 +1,74 @@
+﻿@inject IUserSession session;
+@inject IChatHistoryRepository ChatHistory;
+@inject IMessageService messageService;
+@inject IJSRuntime JSRuntime;
+
+<div class="d-flex flex-column flex-shrink-0 d-none d-md-block p-3 border-end border-grey overflow-hidden justify-content-center" style="width: 380px;">
+    <div class="row justify-content-center">
+        <img src="images/cloud.svg" class="w-50" />
+    </div>
+    <hr>
+
+    @if (chatHistory == null || chatHistory.Count() == 0)
+    {
+        <div class="row text-center text-danger mt-5">
+            <h2 class="fs-4">No knowledge collected yet...</h2>
+        </div>
+    }
+    else
+    {
+        @foreach (var chat in chatHistory)
+        {
+            <div class="row">
+                <div class="col" @onclick="() => GoToChat(chat)">
+                    <article class="card mb-3 m-auto"
+                             style="max-width: 540px">
+                        <a role="button"
+                           class="text-decoration-none text-black">
+                            <div class="row g-0">
+                                <div class="col-3 d-flex align-self-center">
+                                    <img src="@(chat.CardImage)"
+                                         class="img-fluid"
+                                         alt="Space template logo" />
+                                </div>
+                                <div class="col-9">
+                                    <div class="card-body">
+                                        <h2 class="card-title fs-3 text-danger">
+                                            @chat.CardHeading
+                                        </h2>
+                                        <p class="card-text">
+                                            @chat.Heading
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </article>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    private IEnumerable<ChatHistory> chatHistory;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            chatHistory = await ChatHistory.GetAllAsync(x => x.UserId == session.User.Id);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error report: {ex}");
+        }
+    }
+
+    void GoToChat(ChatHistory selectedChat)
+    {
+        JSRuntime.InvokeAsync<object>("Interop.StopPlay");
+        session.CurrentChat = selectedChat;
+        messageService.ChangeChat();
+    }
+}

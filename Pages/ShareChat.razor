@@ -1,0 +1,95 @@
+﻿@page "/sharechat"
+@using System.Text.RegularExpressions;
+@using System.Globalization;
+
+<PageTitle>Dela chatt</PageTitle>
+
+
+<div class="d-flex p-1 mt-1 justify-content-start">
+    <a href="/menu/@UserId">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#48CAB0" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+        </svg>
+    </a>
+</div>
+
+<h3 class="settings-title text-center mt-2 mb-5">Dela chatt</h3>
+
+<div class="text-center mx-auto gap-2 pt-2">
+    <div class="d-flex flex-column justify-content gap-4 mt-5 ">
+        <form>
+            <label class="form-label" for="email">
+                Email:
+                    <InputText class="form-control" id="email" @bind-Value="@email" placeholder="name@example.com" autocomplete="email" />
+            </label>
+        </form>
+        <div>
+            <button type="button" class="btn btn-share">Skicka chatt</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    string email;
+    public bool IsValidEmail (string email)
+    {
+
+        if (string.IsNullOrWhiteSpace(email))
+            return false;
+
+        try
+        {
+            // Normalisera domänen
+            email = Regex.Replace(email, @"(@)(.+)$", DomainMapper,
+                                  RegexOptions.None, TimeSpan.FromMilliseconds(200));
+
+            //Kollar domänen av email och normaliserar den
+            string DomainMapper(Match match)
+            {
+                //Använder IdnMappning-klassen för att konvertera Unicode domän-namn
+                var idn = new IdnMapping();
+
+                //Drar ut och processeserar domän-namnet (slänger ett exception on ej giltlig)
+                string domainName = idn.GetAscii(match.Groups[2].Value);
+
+                return match.Groups[1].Value + domainName;
+            }
+        }
+        catch (RegexMatchTimeoutException e)
+        {
+            return false;
+        }
+        catch (ArgumentException e)
+        {
+            return false;
+        }
+
+        try
+        {
+            return Regex.IsMatch(email,
+                @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+                RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+        }
+        catch (RegexMatchTimeoutException)
+        {
+            return false;
+        }
+    }
+    public List<Message> chatMessages;
+    //Ta chatId, släng in i chatMessages och skicka dess innehåll via mail som json 
+    //alt: stringigy message.body och skicka content till email-tjänsten.
+
+    [Parameter]
+    public Guid UserId { get; set; }
+
+    public async Task SendChat (string email)
+    {
+
+        if (IsValidEmail(email))
+        {
+            //Skicka till Twilio/Sendgrid
+
+        }
+        return;
+    }
+}

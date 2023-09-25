@@ -1,0 +1,92 @@
+﻿@page "/promptwizard"
+@inject HttpClient Http
+@inject IUserSession session;
+
+<PageTitle>Prompt Wizard</PageTitle>
+
+<div class="container">
+    <div class="row mb-3">
+        <span class="border-start border-danger border-5 rounded-1 fs-4 fw-semibold mb-3">
+            Our Chat templates:
+        </span>
+    </div>
+    @if (promptList == null)
+    {
+        <div class="row text-center mt-5">
+            <h1 class="mt-5 text-warning">@message</h1>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 mt-5">
+            @foreach (var card in promptList)
+            {
+                @if (card.CardPlacement <= 3)
+                {
+                    <div class="col-12 col-md-6" @onclick="() => StartChat(card)">
+                        <a  class="text-decoration-none text-black">
+                            <div class="card mb-3 bg-@card.CardColor m-auto" style="max-width: 20rem">
+                                <img src="@card.CardImage"
+                                     class="card-img-top"
+                                     alt="@card.CardImageAlt" />
+                                <div class="card-body">
+                                    <h5 class="card-title text-@card.HeadingTextColor fs-3">
+                                        @card.CardHeading
+                                    </h5>
+                                    <p class="card-text fs-5">
+                                        @card.CardText
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+                @if (card.CardPlacement > 3)
+                {
+                    <div class="col-12 col-md-6 mt-md-5" @onclick="() => StartChat(card)">
+                        <a  class="text-decoration-none text-black">
+                            <div class="card mb-3 bg-@card.CardColor m-auto" style="max-width: 20rem">
+                                <img src="@card.CardImage"
+                                     class="card-img-top"
+                                     alt="@card.CardImageAlt" />
+                                <div class="card-body">
+                                    <h5 class="card-title text-@card.HeadingTextColor fs-3">
+                                        @card.CardHeading
+                                    </h5>
+                                    <p class="card-text fs-5">
+                                        @card.CardText
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private List<PromptCard>? promptList;
+    private string message = "Loading our cool SpeakBot settings";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            promptList = await Http.GetFromJsonAsync<List<PromptCard>>("data/systemPrompts.json");
+        }
+        catch (Exception ex)
+        {
+            promptList = null;
+            message = "Could not load our fancy pancy SpeakBot settings for you...";
+        }
+    }
+
+    void StartChat(PromptCard prompt)
+    {
+        session.PromptCard = prompt;
+        session.CurrentChat = new ChatHistory();
+        navManager.NavigateTo("/chat");
+    }
+}

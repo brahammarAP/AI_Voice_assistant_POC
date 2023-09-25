@@ -1,0 +1,80 @@
+﻿@inject IUserSession session;
+@inject IMessageService messageService;
+@inject IJSRuntime JSRuntime;
+
+<div class="card-header border-0 border-danger border-bottom p-3"
+     style="background-color: #f0f0f0">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <div class="fw-semibold text-black">
+                @session.User.Username's conversation about,
+            </div>
+            <div class="fs-5 fw-semibold text-danger">
+                @CardHeading
+            </div>
+        </div>
+        <div class="d-flex">
+            <div>
+                <a href="/menu" class="btn rounded-circle border-0 text-warning bg-white pb-2 me-2" @onclick="StopSpeech" alt="Menu Page">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
+                        <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z" />
+                        <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z" />
+                    </svg>
+                </a>
+            </div>
+            <div class="dropdown">
+                <button class="btn btn-secondary rounded-circle border-0 text-danger bg-white pb-2"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="16"
+                         height="16"
+                         fill="currentColor"
+                         class="bi bi-three-dots"
+                         viewBox="0 0 16 16">
+                        <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z" />
+                    </svg>
+                </button>
+                <ul class="dropdown-menu mt-2 me-3 border-warning border-2">
+                    @if (chatExists)
+                    {
+                        <li>
+                            <a class="dropdown-item"
+                               href="/chatsettings"
+                               @onclick="StopSpeech">Chat Options...</a>
+                        </li>
+                        <hr class="text-danger border-3" />
+                    }
+                    <li>
+                        <a class="dropdown-item" 
+                            href="/menu"
+                            @onclick="StopSpeech">Main Menu</a>
+                    </li>
+                    <SignOutButton />
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string CardHeading;
+    private bool chatExists;
+
+    protected override async Task OnInitializedAsync()
+    {
+        CardHeading = session.CurrentChat.CardHeading ?? session.PromptCard.CardHeading;
+        chatExists = (session.CurrentChat.Id != Guid.Empty) ? true : false;
+        messageService.OnChatUpdate += UpdateHeading;
+    }
+
+    void UpdateHeading()
+    {
+        CardHeading = session.CurrentChat.CardHeading;
+        StateHasChanged();
+    }
+
+    async Task StopSpeech()
+         => await JSRuntime.InvokeAsync<object>("Interop.StopPlay");
+}

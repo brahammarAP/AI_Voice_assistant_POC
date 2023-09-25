@@ -1,0 +1,23 @@
+﻿.settings-title {
+    font-weight: 500;
+}
+
+button {
+    font-weight: 600;
+    box-shadow: none;
+}
+
+.btn:focus, .btn:active {
+    outline-color: #3ba48f !important;
+/*    box-shadow: rgba(255, 93, 169, 0.75) 0px 0px 0px 5px;
+*/}
+
+.btn-delete {
+    background-color: #287162;
+    color: #eae7d8;
+}
+
+.btn-share {
+    background-color: #48CAB0;
+    color: #174037;
+}

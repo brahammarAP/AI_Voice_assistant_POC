@@ -1,0 +1,139 @@
+﻿@using System.Web;
+@inject IUserSession session;
+@inject IJSRuntime JSRuntime;
+@inject IChatHistoryRepository ChatHistory;
+@inject IMessageService messageService;
+
+<div class="card-body position-relative modal-dialog-scrollable overflow-auto px-3"
+        style="background-color: #f0f0f0"
+        id="chatcontainer">
+
+    @if (chatMessages == null || chatMessages.Count() == 0)
+    {
+        <div class="text-center mt-5 text-success">@message</div>
+    }
+    else
+    {
+        @foreach (var item in chatMessages)
+        {
+            if (!item.IsPrompt)
+            { 
+                <div class="container">
+                    <div class="row">
+                        <div class="flexbox-container d-flex flex justify-content-end flex-row-reverse mb-4 gap-1 mx-auto">
+                            <div class="chat-response p-3 ms-2 border rounded-3 bg-white border-3 border-warning">
+                                <p class="small mb-2 text-wrap">
+                                    @((MarkupString)Regex.Replace(
+                                        HttpUtility.HtmlEncode(@item.Body),
+                                        "\r?\n|\r", "<br />"))
+                                </p>
+                                <a class="btn btn-white text-success rounded-circle pb-2 float-end" @onclick="(() => ReplayAnswer(item.Body))">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-volume-up-fill" viewBox="0 0 16 16">
+                                        <path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z" />
+                                        <path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z" />
+                                        <path d="M8.707 11.182A4.486 4.486 0 0 0 10.025 8a4.486 4.486 0 0 0-1.318-3.182L8 5.525A3.489 3.489 0 0 1 9.025 8 3.49 3.49 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z" />
+                                    </svg>
+                                </a>
+                            </div>
+                            <div class="svg-container text-warning">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                        width="1.5rem"
+                                        height="1.5rem"
+                                        fill="currentColor"
+                                        class="bi bi-person-circle"
+                                        viewBox="0 0 16 16">
+                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                    <path fill-rule="evenodd"
+                                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                                </svg>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="container">
+                    <div class="row">
+                        <div class="flexbox-container d-flex flex justify-content-start flex-row-reverse mb-4 gap-1 mx-auto">
+                            <div class="svg-container text-danger">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                        width="24px"
+                                        height="24px"
+                                        fill="currentColor"
+                                        class="bi bi-person-circle"
+                                        viewBox="0 0 16 16">
+                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                    <path fill-rule="evenodd"
+                                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                                </svg>
+                            </div>
+                            <div class="chat-message p-3 me-2 border rounded-3 bg-white border-3 border-danger">
+                                <p class="small mb-0 text-wrap">
+                                    @((MarkupString)Regex.Replace(
+                                        HttpUtility.HtmlEncode(@item.Body),
+                                        "\r?\n|\r", "<br />"))
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback OnMessageRecived { get; set; }
+
+    private List<Message> chatMessages;
+    string message = "Starta en konversation genom att spela in ett röstmeddelande eller skriv här nedan...";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadMessages();
+        messageService.OnChatUpdate += async () => { await LoadMessages(); };
+        messageService.OnMessageUpdate += ReloadMessages;
+    }
+
+    async Task LoadMessages()
+    {
+        if (session.CurrentChat.Id == Guid.Empty)
+        {
+            session.CurrentChat.Prompts = new List<Message>();
+            session.CurrentChat.Id = Guid.NewGuid();
+            return;
+        }
+
+        var historyResponse = await ChatHistory.GetAsync(chat => chat.Id == session.CurrentChat.Id);
+        chatMessages = historyResponse.Prompts;
+
+        StateHasChanged();
+    }
+
+    void ReloadMessages(IEnumerable<Message> messages)
+    {
+        chatMessages = messages.ToList();
+        StateHasChanged();
+    }
+
+    async Task ReplayAnswer(string body)
+    {
+        try
+        {
+            await JSRuntime.InvokeAsync<object>("Interop.StopPlay");
+            await JSRuntime.InvokeAsync<object>("Interop.TextToSpeechSDK", body, "sv-SE-SofieNeural", session.Key, session.Reigion);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error creating Text to Speech SDK object: " + ex.Message);
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JSRuntime.InvokeAsync<string>("ScrollToBottom", "chatcontainer");
+    }
+}

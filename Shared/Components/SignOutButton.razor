@@ -1,0 +1,18 @@
+﻿@inject ICookieStoreAPIService cookieStore;
+@inject IJSRuntime JSRuntime;
+
+<li>
+    <a class="dropdown-item" href="#" @onclick="SignOut">Sign out</a>
+</li>
+
+@code {
+
+    async Task SignOut()
+    {
+        await JSRuntime.InvokeAsync<object>("Interop.StopPlay");
+        await cookieStore.DeleteAsync("Username");
+        await cookieStore.DeleteAsync("UserId");
+
+        navManager.NavigateTo("/");
+    }
+}

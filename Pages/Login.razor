@@ -1,0 +1,121 @@
+@page "/login"
+@layout NoHeaderLayout;
+@inject ILocalStorageAPI localStorage;
+@inject IConfiguration configuration;
+@inject ICookieStoreAPIService cookieStore;
+@inject IUserSession session;
+
+<PageTitle>Login</PageTitle>
+
+<div class="container">
+    <h1 class="my-5">User Account</h1>
+    <div class="row mt-5">
+        <div class="col col-lg-6">
+            <EditForm Model="@User" OnValidSubmit="UserLogin">
+                <DataAnnotationsValidator />
+                <div class="mb-3">
+                    <label class="form-label" for="username">Användarnamn:</label>
+                    <InputText 
+                        class="form-control" 
+                        id="username" 
+                        @bind-Value="User.Username" 
+                        placeholder="name@example.com" 
+                        autocomplete="username"
+                        aria-describedby="Enter Username" />
+                    <div id="Enter Username" class="form-text">
+                        We'll <span class="text-decoration-line-through">never</span> share your email with anyone else.
+                    </div>
+                    <ValidationMessage For="@(() => User.Username)" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="password">Lösenord</label>
+                    <InputText 
+                        type="password" 
+                        id="password" 
+                        class="form-control" 
+                        @bind-Value="User.Password" />
+                    <ValidationMessage For="@(() => User.Password)" />
+                </div>
+
+                <h3 class="text-center text-danger mb-5">@message</h3>
+
+                <button class="btn btn-warning me-2" type="submit">Logga in</button>
+
+                <button class="btn btn-primary" @onclick="UserRegister">Registrera ny användare</button>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    private User User = new();
+    private string message = string.Empty;
+
+    private async Task UserLogin()
+    {
+        User getUser = new();
+
+        var storedUsers = await localStorage.GetItemAsync<List<User>>(configuration["UserSettings:UserStorageLocation"]);
+
+        if (storedUsers != null) 
+            getUser = storedUsers.FirstOrDefault(x => x.Username == User.Username);
+
+        if (getUser != null && getUser.Username == User.Username && getUser.Password == User.Password)
+        {
+            await SetCookie(getUser);
+        }
+        else
+        {
+            message = "User not found";
+        }
+    }
+
+    private async Task UserRegister()
+    {
+        var storedUsers = await localStorage.GetItemAsync<List<User>>(configuration["UserSettings:UserStorageLocation"]) ?? new List<User>();
+
+        if (storedUsers.FirstOrDefault(x => x.Username == User.Username) != null)
+        {
+            message = "Username already exists";
+            return;
+        }
+
+        var newUser = new User()
+        {
+            Username = User.Username,
+            Password = User.Password
+        };
+
+        storedUsers.Add(newUser);
+
+        await localStorage.SetItemAsync<List<User>>(configuration["UserSettings:UserStorageLocation"], storedUsers);
+
+        await SetCookie(newUser);
+    }
+
+    async Task SetCookie(User user)
+    {
+        List<Cookie> cookieList = new List<Cookie>();
+
+        var expirationDate = DateTime.UtcNow.Add(TimeSpan.FromDays(10));
+        double unixTimestampMilliseconds = expirationDate.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+
+        cookieList.Add(new Cookie() { Name = "Username", Value = user.Username, Expires = unixTimestampMilliseconds });
+        cookieList.Add(new Cookie() { Name = "UserId", Value = user.Id.ToString(), Expires = unixTimestampMilliseconds });
+
+        foreach (var cookie in cookieList)
+        {
+            await cookieStore.SetAsync(cookie);
+        }
+
+        SetUserSession(user);
+    }
+
+    void SetUserSession(User user)
+    {
+        session.User.Username = user.Username;
+        session.User.Id = user.Id;
+
+        navManager.NavigateTo("/menu");
+    }
+}
