@@ -1,11 +1,13 @@
 ﻿@inject ICookieStoreAPIService cookieStore;
 @inject IJSRuntime JSRuntime;
+@inject INavigationServices navService
 
 <li>
     <a class="dropdown-item" href="#" @onclick="SignOut">Sign out</a>
 </li>
 
 @code {
+    private bool isNotChatSettings = false;
 
     async Task SignOut()
     {
@@ -13,6 +15,7 @@
         await cookieStore.DeleteAsync("Username");
         await cookieStore.DeleteAsync("UserId");
 
+        navService.ToggleChatSettings(isNotChatSettings);
         navManager.NavigateTo("/");
     }
 }
