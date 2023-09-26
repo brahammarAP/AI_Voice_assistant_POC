@@ -66,12 +66,13 @@
     {
         CardHeading = session.CurrentChat.CardHeading ?? session.PromptCard.CardHeading;
         chatExists = (session.CurrentChat.Id != Guid.Empty) ? true : false;
-        messageService.OnChatUpdate += UpdateHeading;
+        messageService.OnAddChat += async () => { chatExists = true; StateHasChanged(); };
     }
 
     void UpdateHeading()
     {
         CardHeading = session.CurrentChat.CardHeading;
+        chatExists = (session.CurrentChat.Id != Guid.Empty) ? true : false;
         StateHasChanged();
     }
 

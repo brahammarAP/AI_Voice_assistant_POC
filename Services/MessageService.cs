@@ -6,8 +6,10 @@ public interface IMessageService
 {
     event Action<IEnumerable<Message>> OnMessageUpdate;
     event Action OnChatUpdate;
+    public event Action OnAddChat;
     void SendMessage(IEnumerable<Message> messages);
     Task ChangeChat();
+    Task AddChat();
     void ClearMessages();
 }
 
@@ -15,6 +17,7 @@ public class MessageService : IMessageService
 {
     public event Action<IEnumerable<Message>> OnMessageUpdate;
     public event Action OnChatUpdate;
+    public event Action OnAddChat;
 
     public void SendMessage(IEnumerable<Message> messages)
     {
@@ -24,6 +27,11 @@ public class MessageService : IMessageService
     public async Task ChangeChat()
     {
         OnChatUpdate?.Invoke();
+    }
+
+    public async Task AddChat()
+    {
+        OnAddChat?.Invoke();
     }
 
     public void ClearMessages()

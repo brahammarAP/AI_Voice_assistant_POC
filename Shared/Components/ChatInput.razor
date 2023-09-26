@@ -224,6 +224,9 @@
         await ChatHistory.CreateAsync(storedHistory);
 
         messageService.SendMessage(chatMessages);
+
+        if(chatMessages.Count < 2)
+            messageService.AddChat();
     }
 
     private async Task Resize(ChangeEventArgs e)
