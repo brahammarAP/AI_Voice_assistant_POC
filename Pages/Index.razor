@@ -3,6 +3,7 @@
 @inject ICookieStoreAPIService cookieStore;
 @inject IUserSession session;
 @inject IConfiguration configuration;
+@inject IJSRuntime JS;
 
 <PageTitle>Välkommen</PageTitle>
 
@@ -14,13 +15,13 @@
                      alt="AddPro Logo"
                      class="img-fluid" />
             </div>
-
             <div class="text-center col-xl-6">
-                <h1 class="mb-3 fw-bold mb-md-5">
+                <h1 class="mb-3 fw-bold mb-md-4">
                     Speak<span class="text-danger">BOT</span>
                 </h1>
+                <h2 class="fw-lighter fs-5 fst-italic mb-3 pb-2 ">- A LIA-project for <span class="fs-5 fw-bold">AddPro</span></h2>
                 <p class="mb-3 fs-4 mb-md-5">
-                    Turn your
+                Turn your
                     <span class="fw-bold">questions</span> in to
                     FACTS by
                     <span class="fw-bold">shouting</span> or
@@ -35,7 +36,7 @@
                 {
                     <a type="button"
                        href="/menu"
-                       class="btn btn-warning btn-lg px-4 me-md-2 w-75 mt-4 m-auto fw-bold">
+                       class="btn btn-warning btn-lg px-4 me-md-2 w-75 mt-4 m-auto fw-bold @hideElement">
                         Go explore with AI &rarr;
                     </a>
                 }
@@ -43,9 +44,14 @@
                 {
                     <a type="button"
                        href="/login"
-                       class="btn btn-warning btn-lg px-4 me-md-2 w-75 mt-4 m-auto fw-bold">
+                       class="btn btn-warning btn-lg px-4 me-md-2 w-75 mt-4 m-auto fw-bold @hideElement">
                         Sign In &rarr;
                     </a>
+                }
+                @if (incompatibleBrowser)
+                {
+                    <h2 class="@incompatibleBrowser text-danger mt-2">Please use Chrome or Microsoft Edge</h2>
+
                 }
             </div>
         </div>
@@ -54,25 +60,39 @@
 
 @code{
     private bool isLogged;
+    private bool incompatibleBrowser = false;
+    private string hideElement = null;
 
     protected override async Task OnInitializedAsync()
     {
-        try
+        await JS.InvokeAsync<IJSObjectReference>("import", "./js/BrowserIdentifier.js");
+
+        var result = await JS.InvokeAsync<string>("BrowserIdentifyer.IdentifyBrowser");
+
+        if (result == "Google Chrome or Chromium" || result == "Microsoft Edge")
         {
-            var cookieUsername = await cookieStore.GetAsync("Username") ?? null!;
+            try
+            {
+                var cookieUsername = await cookieStore.GetAsync("Username") ?? null!;
 
-            if (cookieUsername == null) return;
+                if (cookieUsername == null) return;
 
-            var cookieUserId = await cookieStore.GetAsync("UserId");
+                var cookieUserId = await cookieStore.GetAsync("UserId");
 
-            session.User.Username = cookieUsername.Value;
-            session.User.Id = Guid.Parse(cookieUserId.Value);
+                session.User.Username = cookieUsername.Value;
+                session.User.Id = Guid.Parse(cookieUserId.Value);
 
-            isLogged = session.IsLoggedIn();
+                isLogged = session.IsLoggedIn();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An Error has occured: {ex}");
+            }
         }
-        catch (Exception ex)
+        else
         {
-            Console.WriteLine($"An Error has occured: {ex}");
+            incompatibleBrowser = true;
+            hideElement = "d-none";
         }
     }
 }
