@@ -17,6 +17,9 @@
 
         isNotChatSettings = false;
         navService.ToggleChatSettings(isNotChatSettings);
+
+        await JSRuntime.InvokeVoidAsync("eval", "location.reload(true)");
+
         navManager.NavigateTo("/");
     }
 }
