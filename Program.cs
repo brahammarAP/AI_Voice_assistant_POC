@@ -4,7 +4,6 @@ using ChatBotAI.Repository.IRepository;
 using ChatBotAI.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -20,8 +19,6 @@ builder.Services.AddSingleton(builder.Configuration);
 builder.Services
     .AddSingleton<IAzureAiChatServices, AzureAiChatServices>()
     .AddSingleton<IUserSession, UserSession>();
-
-builder.Services.AddSpeechSynthesis();
 
 builder.Services
     .AddScoped<ILocalStorageAPI, LocalStorageAPIService>()
