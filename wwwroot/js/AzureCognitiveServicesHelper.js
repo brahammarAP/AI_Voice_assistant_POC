@@ -56,7 +56,7 @@ window.Interop = {
         try {
             if (typeof SpeechSDK !== 'undefined') {
                 const speechConfig = SpeechSDK.SpeechConfig.fromSubscription(key, region);
-                speechConfig.speechRecognitionLanguage = "en-US";
+                speechConfig.speechRecognitionLanguage = "sv-SE";
                 const audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
                 const recognizer = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
 
