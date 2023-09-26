@@ -2,6 +2,7 @@
 @inject IUserSession session;
 @inject IChatHistoryRepository ChatHistory;
 @inject NavigationManager navManager;
+@inject INavigationServices navServices;
 
 <PageTitle>Chat settings</PageTitle>
 
@@ -82,6 +83,12 @@
 </div>
 
 @code {
+    private bool isNowChatSettingsBool = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        navServices.ToggleChatSettings(isNowChatSettingsBool);
+    }
 
     public async Task DeleteChat()
     {
