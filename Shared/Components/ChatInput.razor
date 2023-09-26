@@ -61,7 +61,6 @@
     private ChatHistory currentChat;
     private bool isText, isDisabled;
     private string? inputText = string.Empty;
-    // private static string? key, region;
 
     private void btnState(string e) 
         => isText = (String.IsNullOrEmpty(e)) ? false : true;
@@ -69,9 +68,6 @@
     protected override async Task OnInitializedAsync()
     {
         messageService.OnChatUpdate += async () => { LoadMessages(); };
-
-        // key = Configuration.GetSection("Azure:SpeechServiceKey").Value;
-        // region = Configuration.GetSection("Azure:SpeechServiceLocation").Value;
 
         await LoadMessages();
     }
@@ -108,7 +104,7 @@
             {
                 await JSRuntime.InvokeAsync<object>("Interop.StopPlay");
 
-                var result = await JSRuntime.InvokeAsync<object>("Interop.SpeechToTextSDK");
+                var result = await JSRuntime.InvokeAsync<string>("Interop.SpeechToTextSDK", session.Key, session.Reigion);
 
                 ModalDialog.Close();
 
@@ -119,7 +115,7 @@
                     return;
                 }
 
-                await HandleAudioData(JsonSerializer.Serialize(result));
+                await HandleAudioData(result);
             }
             catch (Exception ex)
             {
@@ -135,6 +131,13 @@
 
     private async Task HandleAudioData(string response)
     {
+        var questionString = response[response.Length - 1];
+
+        if (questionString != '?')
+        {
+            response = response.Substring(0, response.Length - 1) + "?";
+        }
+
         await SaveChat(new Message(response, true));
 
         await GetAIResponse();
