@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace ChatBotAI.Repository.IRepository;
+namespace SpeakBot.Repository.IRepository;
 
 public interface ILocalStorageRepository<T> where T : class
 {

@@ -1,4 +1,4 @@
-﻿namespace ChatBotAI.Models;
+﻿namespace SpeakBot.Models;
 
 public class PromptCard
 {

@@ -1,7 +1,7 @@
-﻿using ChatBotAI.Models;
+﻿using SpeakBot.Models;
 using Microsoft.JSInterop;
 
-namespace ChatBotAI.Services;
+namespace SpeakBot.Services;
 
 public interface ICookieStoreAPIService
 {

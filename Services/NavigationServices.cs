@@ -1,4 +1,4 @@
-﻿namespace ChatBotAI.Services;
+﻿namespace SpeakBot.Services;
 
 public interface INavigationServices
 {

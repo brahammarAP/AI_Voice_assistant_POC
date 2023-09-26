@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ChatBotAI.Models;
+namespace SpeakBot.Models;
 
 public class User
 {

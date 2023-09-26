@@ -1,8 +1,8 @@
-﻿using ChatBotAI.Repository.IRepository;
-using ChatBotAI.Services;
+﻿using SpeakBot.Repository.IRepository;
+using SpeakBot.Services;
 using System.Linq.Expressions;
 
-namespace ChatBotAI.Repository;
+namespace SpeakBot.Repository;
 
 public class LocalStorageRepository<T> : ILocalStorageRepository<T> where T : class
 {

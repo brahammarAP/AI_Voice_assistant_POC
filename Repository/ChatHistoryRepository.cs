@@ -1,9 +1,9 @@
-﻿using ChatBotAI.Models;
-using ChatBotAI.Repository.IRepository;
-using ChatBotAI.Services;
+﻿using SpeakBot.Models;
+using SpeakBot.Repository.IRepository;
+using SpeakBot.Services;
 using System.Linq.Expressions;
 
-namespace ChatBotAI.Repository;
+namespace SpeakBot.Repository;
 
 public class ChatHistoryRepository : LocalStorageRepository<ChatHistory>, IChatHistoryRepository
 {

@@ -1,7 +1,7 @@
-﻿using ChatBotAI.Models;
+﻿using SpeakBot.Models;
 using Microsoft.Extensions.Configuration;
 
-namespace ChatBotAI.Services;
+namespace SpeakBot.Services;
 
 public interface IUserSession
 {

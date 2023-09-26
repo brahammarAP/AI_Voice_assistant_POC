@@ -1,6 +1,6 @@
-﻿using ChatBotAI.Models;
+﻿using SpeakBot.Models;
 
-namespace ChatBotAI.Services;
+namespace SpeakBot.Services;
 
 public interface IMessageService
 {

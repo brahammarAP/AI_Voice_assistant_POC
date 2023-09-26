@@ -1,7 +1,7 @@
 ﻿using Microsoft.JSInterop;
 using System.Text.Json;
 
-namespace ChatBotAI.Services;
+namespace SpeakBot.Services;
 
 public interface ILocalStorageAPI
 {
