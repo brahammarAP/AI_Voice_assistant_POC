@@ -23,6 +23,7 @@ builder.Services
     .AddScoped<ILocalStorageAPI, LocalStorageAPIService>()
     .AddScoped<ICookieStoreAPIService, CookieStoreAPIService>()
     .AddScoped<IChatHistoryRepository, ChatHistoryRepository>()
+    .AddScoped<INavigationServices, NavigationServices>()
     .AddScoped<IMessageService, MessageService>();
 
 await builder.Build().RunAsync();
