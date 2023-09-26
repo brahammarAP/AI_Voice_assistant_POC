@@ -95,7 +95,24 @@
     // (TouchPoint ReferencePoint, DateTime StartTime) startPoint;
 
     protected override async Task OnInitializedAsync()
-        => await GetUserHistory();
+    {
+        await GetUserHistory();
+
+        if (session.User.Username == null)
+        {
+            if (await session.IsLoggedIn())
+            {
+                await GetUserHistory();
+                StateHasChanged();
+            }
+            else
+            {
+                navManager.NavigateTo("/");
+            }
+        }
+    }
+
+
 
     async Task GetUserHistory()
         => userChatHistory = await ChatHistory.GetAllAsync(x => x.UserId == session.User.Id) ?? null!;

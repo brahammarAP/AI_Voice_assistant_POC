@@ -69,6 +69,12 @@
     {
         username = session.User.Username;
         IsChatSettings = navServices.GetChatSettingsStatus();
+
+        if (session.User.Username == null)
+        {
+            if (await session.IsLoggedIn())
+                username = session.User.Username;
+        }
     }
 
     void GoToMenu()

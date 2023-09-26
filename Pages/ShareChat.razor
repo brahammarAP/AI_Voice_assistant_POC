@@ -1,6 +1,7 @@
 ﻿@page "/sharechat"
 @using System.Text.RegularExpressions;
 @using System.Globalization;
+@inject IUserSession session;
 
 <PageTitle>Dela chatt</PageTitle>
 
@@ -31,6 +32,18 @@
 
 @code {
     string email;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (session.User.Username == null)
+        {
+            if (await session.IsLoggedIn())
+                navManager.NavigateTo("/menu");
+            else
+                navManager.NavigateTo("/");
+        }
+    }
+
     public bool IsValidEmail (string email)
     {
 

@@ -71,23 +71,7 @@
 
         if (result == "Google Chrome or Chromium" || result == "Microsoft Edge")
         {
-            try
-            {
-                var cookieUsername = await cookieStore.GetAsync("Username") ?? null!;
-
-                if (cookieUsername == null) return;
-
-                var cookieUserId = await cookieStore.GetAsync("UserId");
-
-                session.User.Username = cookieUsername.Value;
-                session.User.Id = Guid.Parse(cookieUserId.Value);
-
-                isLogged = session.IsLoggedIn();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An Error has occured: {ex}");
-            }
+            isLogged = await session.IsLoggedIn();
         }
         else
         {
