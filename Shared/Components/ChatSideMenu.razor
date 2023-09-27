@@ -55,6 +55,13 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadHistory();
+
+        messageService.OnAddChat += async () => { LoadHistory(); };
+    }
+
+    async Task LoadHistory()
+    {
         try
         {
             chatHistory = await ChatHistory.GetAllAsync(x => x.UserId == session.User.Id);
@@ -63,6 +70,10 @@
         {
             Console.WriteLine($"Error report: {ex}");
         }
+
+
+        if (chatHistory.Any(chat => chat.Id == session.CurrentChat.Id) && session.CurrentChat.Prompts.Count() <= 2)
+            StateHasChanged();
     }
 
     void GoToChat(ChatHistory selectedChat)

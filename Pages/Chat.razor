@@ -22,8 +22,19 @@
 @code {
     private List<Message> chatMessages;
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (session.User.Username == null)
+        {
+            if (await session.IsLoggedIn())
+                navManager.NavigateTo("/menu");
+            else
+                navManager.NavigateTo("/");
+        }
+    }
+
     void HandleMessages()
-        => session.CurrentChat.Prompts = chatMessages;
+    => session.CurrentChat.Prompts = chatMessages;
 
     async Task HandleEvent()
         => await InvokeAsync(() => StateHasChanged());

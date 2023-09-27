@@ -15,13 +15,11 @@ builder.Services.AddSingleton(builder.Configuration);
 
 builder.Services
     .AddSingleton<IAzureAiChatServices, AzureAiChatServices>()
-    .AddSingleton<IUserSession, UserSession>();
-
-//builder.Services.AddSpeechSynthesis();
+    .AddSingleton<IUserSession, UserSession>()
+    .AddSingleton<ICookieStoreAPIService, CookieStoreAPIService>();
 
 builder.Services
     .AddScoped<ILocalStorageAPI, LocalStorageAPIService>()
-    .AddScoped<ICookieStoreAPIService, CookieStoreAPIService>()
     .AddScoped<IChatHistoryRepository, ChatHistoryRepository>()
     .AddScoped<INavigationServices, NavigationServices>()
     .AddScoped<IMessageService, MessageService>();

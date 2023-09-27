@@ -206,7 +206,7 @@
             {
                 Id = currentChat.Id,
                 UserId = session.User.Id,
-                Heading = session.ReFraser(chatMessages.FirstOrDefault(x => x.IsPrompt == true).Body, 5),
+                Heading = ExtensionMethods.StringByWordCount(chatMessages.FirstOrDefault(x => x.IsPrompt == true).Body, 5),
                 Prompts = chatMessages,
                 IsLocked = false,
                 CardHeading = session.PromptCard.CardHeading,
@@ -224,6 +224,9 @@
         await ChatHistory.CreateAsync(storedHistory);
 
         messageService.SendMessage(chatMessages);
+
+        if(chatMessages.Count < 2)
+            messageService.AddChat();
     }
 
     private async Task Resize(ChangeEventArgs e)

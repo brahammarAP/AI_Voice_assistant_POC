@@ -1,4 +1,6 @@
-﻿namespace SpeakBot.Services;
+﻿using Microsoft.Extensions.Logging;
+
+namespace SpeakBot.Services;
 
 public static class ExtensionMethods
 {

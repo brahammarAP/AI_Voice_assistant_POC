@@ -72,6 +72,14 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (session.User.Username == null)
+        {
+            if (await session.IsLoggedIn())
+                navManager.NavigateTo("/menu");
+            else
+                navManager.NavigateTo("/");
+        }
+        
         try
         {
             promptList = await Http.GetFromJsonAsync<List<PromptCard>>("data/systemPrompts.json");

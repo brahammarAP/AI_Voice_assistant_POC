@@ -1,5 +1,7 @@
 ﻿using SpeakBot.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using System.Runtime.CompilerServices;
 
 namespace SpeakBot.Services;
 
@@ -11,46 +13,45 @@ public interface IUserSession
     string? Reigion { get; set; }
     User User { get; set; }
 
-    bool IsLoggedIn();
-    string ReFraser(string text, int wordCount);
+    Task<bool> IsLoggedIn();
 }
 
 public class UserSession : IUserSession
 {
+    private readonly ICookieStoreAPIService cookieStore;
     public User User { get; set; } = new User();
     public ChatHistory CurrentChat { get; set; } = new ChatHistory();
     public PromptCard PromptCard { get; set; } = new PromptCard();
     public string? Key { get; set; }
     public string? Reigion { get; set; }
 
-    public UserSession(IConfiguration configuration)
+    public UserSession(IConfiguration configuration, ICookieStoreAPIService cookieStore)
     {
         Key = configuration.GetSection("Azure:SpeechServiceKey").Value;
         Reigion = configuration.GetSection("Azure:SpeechServiceLocation").Value;
+        this.cookieStore = cookieStore;
     }
 
-    public bool IsLoggedIn()
+    public async Task<bool> IsLoggedIn()
     {
-        return string.IsNullOrEmpty(User.Username) ? false : true;
-    }
-
-    public string ReFraser(string text, int wordCount)
-    {
-        var words = text.Split(' ');
-
-        if (text.Length <= 30 && words.Length < wordCount)
+        try
         {
-            return text;
+            var cookieUsername = await cookieStore.GetAsync("Username") ?? null!;
+
+            if (cookieUsername == null) return false;
+
+            var cookieUserId = await cookieStore.GetAsync("UserId");
+
+            this.User.Username = cookieUsername.Value;
+            this.User.Id = Guid.Parse(cookieUserId.Value);
+
+            return string.IsNullOrEmpty(this.User.Username) ? false : true;
         }
-
-        string newString = string.Join(" ", words.Take(wordCount));
-
-        if (newString.Length > 30)
+        catch (Exception ex)
         {
-            newString = newString.Substring(0, 30);
+            Console.WriteLine($"An Error has occured: {ex}");
+            return false;
         }
-
-        return $"{newString}...";
     }
 }
 

@@ -88,6 +88,14 @@
     protected override async Task OnInitializedAsync()
     {
         navServices.ToggleChatSettings(isNowChatSettingsBool);
+
+        if (session.User.Username == null)
+        {
+            if (await session.IsLoggedIn())
+                navManager.NavigateTo("/menu");
+            else
+                navManager.NavigateTo("/");
+        }
     }
 
     public async Task DeleteChat()
