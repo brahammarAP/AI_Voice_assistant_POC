@@ -97,10 +97,12 @@
 
 @code {
     private bool isNowChatSettingsBool = true;
+    private ChatHistory chatHistory;
 
     protected override async Task OnInitializedAsync()
     {
         navServices.ToggleChatSettings(isNowChatSettingsBool);
+        chatHistory = session.CurrentChat;
 
         if (session.User.Username == null)
         {
@@ -109,13 +111,6 @@
             else
                 navManager.NavigateTo("/");
         }
-    }
-
-    private ChatHistory chatHistory;
-
-    protected override async Task OnInitializedAsync()
-    {
-        chatHistory = session.CurrentChat;
     }
 
     public async Task DeleteChat()
