@@ -54,12 +54,16 @@
             @foreach (var chat in userChatHistory)
             {
                 @* var currentChatId = chat.Id;
-                <a href="/chat/@UserId/@chat.Id"
+                <a href="/chat/@chat.Id"
                    class="menu-button btn p-1"
                 @ontouchstart="HandleTouchStart"
                 @ontouchend="@((TouchEventArgs t) => HandleTouchEnd(currentChatId, t))">@chat.Heading</a> *@
 
-                <div class="col-12 col-md-6" @onclick="() => GoToChat(chat)">
+                <div class="col-12 col-md-6 offset-0" 
+                     @onclick="() => GoToChat(chat)"
+                     @ontouchstart="HandleTouchStart"
+                     @ontouchend="@((TouchEventArgs t) => HandleTouchEnd(chat.Id, t))"
+                     >
                     <article class="card mb-3 m-auto"
                                 style="max-width: 540px">
                         <a role="button"
@@ -92,7 +96,7 @@
 @code {
     private IEnumerable<ChatHistory> userChatHistory;
 
-    // (TouchPoint ReferencePoint, DateTime StartTime) startPoint;
+    (TouchPoint ReferencePoint, DateTime StartTime) startPoint;
 
     protected override async Task OnInitializedAsync()
     {
@@ -126,37 +130,36 @@
         navManager.NavigateTo("/chat");
     } 
 
-    // void HandleTouchStart(TouchEventArgs t)
-    // {
-    //     startPoint.ReferencePoint = t.TargetTouches[0];
-    //     startPoint.StartTime = DateTime.Now;
-    // }
+    void HandleTouchStart(TouchEventArgs t)
+    {
+        startPoint.ReferencePoint = t.TargetTouches[0];
+        startPoint.StartTime = DateTime.Now;
+    }
 
-    // private async Task HandleTouchEnd(Guid chatId, TouchEventArgs t)
-    // {
-    //     var endReference = t.ChangedTouches[0];
+    private async Task HandleTouchEnd(Guid chatId, TouchEventArgs t)
+    {
+        var endReference = t.ChangedTouches[0];
 
-    //     var diffX = startPoint.ReferencePoint.ClientX - endReference.ClientX;
-    //     var diffY = startPoint.ReferencePoint.ClientY - endReference.ClientY;
-    //     var diffTime = DateTime.Now - startPoint.StartTime;
-    //     var velocityX = Math.Abs(diffX / diffTime.Milliseconds);
-    //     var velocityY = Math.Abs(diffY / diffTime.Milliseconds);
-    //     var run = Math.Abs(diffX);
-    //     var rise = Math.Abs(diffY);
-    //     var ang = Math.Atan2(run, rise) * (180/Math.PI);
+        var diffX = startPoint.ReferencePoint.ClientX - endReference.ClientX;
+        var diffY = startPoint.ReferencePoint.ClientY - endReference.ClientY;
+        var diffTime = DateTime.Now - startPoint.StartTime;
+        var velocityX = Math.Abs(diffX / diffTime.Milliseconds);
+        var velocityY = Math.Abs(diffY / diffTime.Milliseconds);
+        var run = Math.Abs(diffX);
+        var rise = Math.Abs(diffY);
+        var ang = Math.Atan2(run, rise) * (180/Math.PI);
 
-    //     var swipeThreshold = 0.8;
+        var swipeThreshold = 0.8;
 
-    //     if (Math.Abs(velocityX - velocityY) < .5 || (velocityX < swipeThreshold && velocityY < swipeThreshold)) return;
+        if (Math.Abs(velocityX - velocityY) < .5 || (velocityX < swipeThreshold && velocityY < swipeThreshold)) return;
 
-    //     if (ang > 85 && velocityX >= swipeThreshold)
-    //     {
-    //         if (diffX > 0)
-    //             await historyStorage.DeleteChatById(chatId);
+        if (ang > 85 && velocityX >= swipeThreshold)
+        {
+            if (diffX > 0)
+                await ChatHistory.DeleteAsync(x => x.Id == chatId);
+        }
 
-    //     }
-
-    //     await GetUserHistory();
-    // }
+        await GetUserHistory();
+    }
 }
 

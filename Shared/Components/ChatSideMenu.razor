@@ -64,7 +64,7 @@
     {
         try
         {
-            chatHistory = await ChatHistory.GetAllAsync(x => x.UserId == session.User.Id);
+            chatHistory = await ChatHistory.GetAllAsync(x => x.UserId == session.User.Id) ?? new List<ChatHistory>();
         }
         catch (Exception ex)
         {
