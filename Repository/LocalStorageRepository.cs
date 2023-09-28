@@ -1,4 +1,5 @@
-﻿using ChatBotAI.Repository.IRepository;
+﻿using ChatBotAI.Models;
+using ChatBotAI.Repository.IRepository;
 using ChatBotAI.Services;
 using System.Linq.Expressions;
 

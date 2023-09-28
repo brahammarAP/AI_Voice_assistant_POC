@@ -4,6 +4,7 @@ using ChatBotAI.Repository.IRepository;
 using ChatBotAI.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.JSInterop;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
