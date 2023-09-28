@@ -19,9 +19,9 @@ public class MobileSwipeService
 
     (TouchPoint ReferencePoint, DateTime StartTime) startPoint;
 
-    public void HandleTouchStart(TouchPoint t)
+    public void HandleTouchStart(TouchEventArgs t)
     {
-        startPoint.ReferencePoint = t;
+        startPoint.ReferencePoint = t.TargetTouches[0];
         startPoint.StartTime = DateTime.Now;
     }
 
@@ -47,10 +47,8 @@ public class MobileSwipeService
             if (diffX > 0)
                 await SwipeLeft(chatId);
             if (diffX > 0)
-                await SwipeRight();
+                return;
         }
-
-        //await messageService.OnChatDelete();
     }
 
     async Task SwipeLeft(Guid chatId)
@@ -59,16 +57,12 @@ public class MobileSwipeService
         // Om knapp är synlig så akriveras ankare för delte
         // skall detta ankare vara kopplat till Swipeservi
         await chatHistory.DeleteAsync(x => x.Id == chatId);
+
+        await messageService.OnChatDelete();
     }
 
     async Task SwipeRight()
     {
 
-    }
-
-    public class SwipeData
-    {
-        public string CSSClassSwipeLeft { get; set; }
-        public string CSSClassSwipeRight { get; set; }
     }
 }
