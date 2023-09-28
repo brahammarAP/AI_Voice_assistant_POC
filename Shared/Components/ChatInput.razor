@@ -1,12 +1,12 @@
 ﻿@using System.Text.Json;
 @inject IAzureAiChatServices ChatService;
 @inject IJSRuntime JSRuntime;
-@inject IUserSession session;
-@inject ICookieStoreAPIService cookieStore;
+@inject IUserSession Session;
+@inject ICookieStoreAPIService CookieStore;
 @inject IChatHistoryRepository ChatHistory;
-@inject IMessageService messageService;
+@inject IMessageService MessageService;
 @inject IConfiguration Configuration;
-@inject NavigationManager navManager;
+@inject NavigationManager NavManager;
 
 <div class="card-footer p-1 border-0 "
      style="background-color: #f0f0f0">
@@ -67,15 +67,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        messageService.OnChatUpdate += async () => { LoadMessages(); };
-
+        MessageService.OnChatUpdate += async () => { LoadMessages(); };
         await LoadMessages();
     }
 
     async Task LoadMessages()
     {
-        chatMessages = session.CurrentChat.Prompts;
-        currentChat = session.CurrentChat;
+        chatMessages = Session.CurrentChat.Prompts;
+        currentChat = Session.CurrentChat;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -164,6 +163,11 @@
         await SaveChat(response);
 
         await GetAiVoice(response);
+
+        var storedHistory = await ChatHistory.GetAllAsync() ?? new List<ChatHistory>();
+
+        if (storedHistory.Count() > 5) await ChatHistory.RemoveItemWhenMoreThanFive(storedHistory.ToList());
+ 
     }
 
     private async Task GetAiVoice(Message request)
@@ -175,7 +179,7 @@
             try
             {
                 await JSRuntime.InvokeAsync<object>("Interop.StopPlay");
-                var aiSpeechResponse = await JSRuntime.InvokeAsync<object>("Interop.TextToSpeechSDK", request.Body, "sv-SE-SofieNeural", session.Key, session.Reigion);
+                var aiSpeechResponse = await JSRuntime.InvokeAsync<object>("Interop.TextToSpeechSDK", request.Body, "sv-SE-SofieNeural", Session.Key, Session.Reigion);
             }
             catch (Exception ex)
             {
@@ -205,16 +209,17 @@
             var newHistory = new ChatHistory
             {
                 Id = currentChat.Id,
-                UserId = session.User.Id,
                 Heading = ExtensionMethods.StringByWordCount(chatMessages.FirstOrDefault(x => x.IsPrompt == true).Body, 5),
+                UserId = Session.User.Id,
                 Prompts = chatMessages,
                 IsLocked = false,
-                CardHeading = session.PromptCard.CardHeading,
-                CardImage = session.PromptCard.CardImage,
-                SystemMessage = session.PromptCard.SystemText
+                CardHeading = Session.PromptCard.CardHeading,
+                CardImage = Session.PromptCard.CardImage,
+                SystemMessage = Session.PromptCard.SystemText
             };
 
-            storedHistory.Add(newHistory);
+                storedHistory.Add(newHistory);
+
         }
         else
         {
@@ -223,7 +228,7 @@
 
         await ChatHistory.CreateAsync(storedHistory);
 
-        messageService.SendMessage(chatMessages);
+        MessageService.SendMessage(chatMessages);
 
         if(chatMessages.Count < 2)
             messageService.AddChat();
