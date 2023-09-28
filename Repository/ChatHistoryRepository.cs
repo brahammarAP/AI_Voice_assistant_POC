@@ -7,7 +7,7 @@ namespace SpeakBot.Repository;
 
 public class ChatHistoryRepository : LocalStorageRepository<ChatHistory>, IChatHistoryRepository
 {
-    public ChatHistoryRepository(IConfiguration configuration, ILocalStorageAPI localStorageAPI, IJSRuntime jSRuntime) : base(configuration, localStorageAPI)
+    public ChatHistoryRepository(IConfiguration configuration, ILocalStorageAPI localStorageAPI) : base(configuration, localStorageAPI)
     {
     }
 

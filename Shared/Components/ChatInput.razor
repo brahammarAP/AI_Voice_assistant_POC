@@ -103,7 +103,7 @@
             {
                 await JSRuntime.InvokeAsync<object>("Interop.StopPlay");
 
-                var result = await JSRuntime.InvokeAsync<string>("Interop.SpeechToTextSDK", session.Key, session.Reigion);
+                var result = await JSRuntime.InvokeAsync<string>("Interop.SpeechToTextSDK", Session.Key, Session.Reigion);
 
                 ModalDialog.Close();
 
@@ -231,7 +231,7 @@
         MessageService.SendMessage(chatMessages);
 
         if(chatMessages.Count < 2)
-            messageService.AddChat();
+            MessageService.AddChat();
     }
 
     private async Task Resize(ChangeEventArgs e)
