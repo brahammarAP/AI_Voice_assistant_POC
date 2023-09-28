@@ -1,6 +1,6 @@
 ﻿@page "/promptwizard"
 @inject HttpClient Http
-@inject IUserSession session;
+@inject IUserSession Session;
 
 <PageTitle>Prompt Wizard</PageTitle>
 
@@ -72,9 +72,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (session.User.Username == null)
+        if (Session.User.Username == null)
         {
-            if (await session.IsLoggedIn())
+            if (await Session.IsLoggedIn())
                 navManager.NavigateTo("/menu");
             else
                 navManager.NavigateTo("/");
@@ -93,8 +93,8 @@
 
     void StartChat(PromptCard prompt)
     {
-        session.PromptCard = prompt;
-        session.CurrentChat = new ChatHistory();
+        Session.PromptCard = prompt;
+        Session.CurrentChat = new ChatHistory();
         navManager.NavigateTo("/chat");
     }
 }

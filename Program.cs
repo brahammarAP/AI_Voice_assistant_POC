@@ -21,7 +21,7 @@ builder.Services
     .AddScoped<ILocalStorageAPI, LocalStorageAPIService>()
     .AddScoped<IChatHistoryRepository, ChatHistoryRepository>()
     .AddScoped<INavigationServices, NavigationServices>()
-    .AddScoped<MobileSwipeService>()
+    .AddScoped<IMobileSwipeService,MobileSwipeService>()
     .AddScoped<IMessageService, MessageService>();
 
 await builder.Build().RunAsync();

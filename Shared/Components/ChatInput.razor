@@ -6,6 +6,7 @@
 @inject IChatHistoryRepository ChatHistory;
 @inject IMessageService MessageService;
 @inject IConfiguration Configuration;
+@inject HttpClient Http;
 @inject NavigationManager NavManager;
 
 <div class="card-footer p-1 border-0 "
@@ -130,9 +131,9 @@
 
     private async Task HandleAudioData(string response)
     {
-        var questionString = response[response.Length - 1];
+        // var questionString = response[response.Length - 1];
 
-        if (questionString != '?')
+        if (await ExtensionMethods.StartsWithQuestionWord(Http, response))
         {
             response = response.Substring(0, response.Length - 1) + "?";
         }
@@ -217,9 +218,8 @@
                 CardImage = Session.PromptCard.CardImage,
                 SystemMessage = Session.PromptCard.SystemText
             };
-
-                storedHistory.Add(newHistory);
-
+        
+            storedHistory.Add(newHistory);
         }
         else
         {

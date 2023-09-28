@@ -1,10 +1,15 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
-using SpeakBot.Pages;
 using SpeakBot.Repository.IRepository;
 
 namespace SpeakBot.Services;
 
-public class MobileSwipeService
+public interface IMobileSwipeService
+{
+    Task HandleTouchEnd(Guid chatId, TouchEventArgs t);
+    void HandleTouchStart(TouchEventArgs t);
+}
+
+public class MobileSwipeService : IMobileSwipeService
 {
     private readonly IChatHistoryRepository chatHistory;
     private readonly IMessageService messageService;

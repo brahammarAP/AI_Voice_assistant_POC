@@ -1,9 +1,9 @@
 @page "/login"
 @layout NoHeaderLayout;
-@inject ILocalStorageAPI localStorage;
-@inject IConfiguration configuration;
-@inject ICookieStoreAPIService cookieStore;
-@inject IUserSession session;
+@inject ILocalStorageAPI LocalStorage;
+@inject IConfiguration Configuration;
+@inject ICookieStoreAPIService CookieStore;
+@inject IUserSession Session;
 
 <PageTitle>Login</PageTitle>
 
@@ -55,7 +55,7 @@
     {
         User getUser = new();
 
-        var storedUsers = await localStorage.GetItemAsync<List<User>>(configuration["UserSettings:UserStorageLocation"]);
+        var storedUsers = await LocalStorage.GetItemAsync<List<User>>(Configuration["UserSettings:UserStorageLocation"]);
 
         if (storedUsers != null) 
             getUser = storedUsers.FirstOrDefault(x => x.Username == User.Username);
@@ -72,7 +72,7 @@
 
     private async Task UserRegister()
     {
-        var storedUsers = await localStorage.GetItemAsync<List<User>>(configuration["UserSettings:UserStorageLocation"]) ?? new List<User>();
+        var storedUsers = await LocalStorage.GetItemAsync<List<User>>(Configuration["UserSettings:UserStorageLocation"]) ?? new List<User>();
 
         if (storedUsers.FirstOrDefault(x => x.Username == User.Username) != null)
         {
@@ -88,7 +88,7 @@
 
         storedUsers.Add(newUser);
 
-        await localStorage.SetItemAsync<List<User>>(configuration["UserSettings:UserStorageLocation"], storedUsers);
+        await LocalStorage.SetItemAsync<List<User>>(Configuration["UserSettings:UserStorageLocation"], storedUsers);
 
         await SetCookie(newUser);
     }
@@ -105,7 +105,7 @@
 
         foreach (var cookie in cookieList)
         {
-            await cookieStore.SetAsync(cookie);
+            await CookieStore.SetAsync(cookie);
         }
 
         SetUserSession(user);
@@ -113,8 +113,8 @@
 
     void SetUserSession(User user)
     {
-        session.User.Username = user.Username;
-        session.User.Id = user.Id;
+        Session.User.Username = user.Username;
+        Session.User.Id = user.Id;
 
         navManager.NavigateTo("/menu");
     }

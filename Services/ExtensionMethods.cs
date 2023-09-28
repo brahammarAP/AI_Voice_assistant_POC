@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Net.Http.Json;
 
 namespace SpeakBot.Services;
 
@@ -22,4 +22,16 @@ public static class ExtensionMethods
 
         return $"{newString}...";
     }
+
+    public static async Task<bool> StartsWithQuestionWord(HttpClient httpClient, string text)
+    {
+        var data = await httpClient.GetFromJsonAsync<Dictionary<string, List<string>>>("data/systemSettings.json");
+
+        var starters = data["QuestionStarterWords"].Select(word => word.ToLower()).ToList();
+
+        var firstWord = text.Split(' ').FirstOrDefault()?.ToLower();
+
+        return firstWord != null && starters.Contains(firstWord);
+    }
+
 }
