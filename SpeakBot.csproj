@@ -17,4 +17,12 @@
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\chris\source\repos\BlazorPWA\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\chris\source\repos\BlazorPWA\.editorconfig" />
+  </ItemGroup>
+
 </Project>

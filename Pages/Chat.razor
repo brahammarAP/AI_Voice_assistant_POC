@@ -12,7 +12,7 @@
 
         <CardNavMenu />
     
-        <MessageList OnMessageRecived="HandleMessages" /> 
+        <MessageList /> 
 
         <ChatInput />
      
@@ -34,7 +34,7 @@
     }
 
     void HandleMessages()
-    => session.CurrentChat.Prompts = chatMessages;
+        => session.CurrentChat.Prompts = chatMessages;
 
     async Task HandleEvent()
         => await InvokeAsync(() => StateHasChanged());
