@@ -37,6 +37,7 @@ public class ChatHistoryRepository : LocalStorageRepository<ChatHistory>, IChatH
     public async Task RemoveItemWhenMoreThanFive(List<ChatHistory> chatHistory)
     {
         List<ChatHistory> newChatHistory = new List<ChatHistory>();
+        //errorMessage = string.Empty;    
 
         var notFavoritedChatHistory = chatHistory.Where(history => !history.IsLocked).ToList();
 
@@ -48,6 +49,9 @@ public class ChatHistoryRepository : LocalStorageRepository<ChatHistory>, IChatH
             //await jsRuntime.InvokeVoidAsync("alert", "All chats are liked. Please unlike one to create new chat.");
             //return;
         }
+        try
+        {
+
 
         if (chatHistory.Count() >= 5 && chatHistory.All(history => !history.IsLocked))
         {
@@ -65,5 +69,20 @@ public class ChatHistoryRepository : LocalStorageRepository<ChatHistory>, IChatH
 
         await SaveAsync(newChatHistory);
 
+        }
+        catch (Exception e)
+        {
+            throw new Exception("All chats are liked. Please unlike one to create new chat.");
+            //var errorMessage = "All chats are liked. Please unlike one to create new chat.";
+            //var customException = new AllChatsLockedException(errorMessage);
+        }
     }
 }
+
+//public class AllChatsLockedException : Exception
+//{
+//    public AllChatsLockedException (string message) : base(message)
+//    {
+
+//    }
+//}
