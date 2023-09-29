@@ -11,7 +11,7 @@
     <h1 class="my-5">User Account</h1>
     <div class="row mt-5">
         <div class="col col-lg-6">
-            <EditForm Model="@User" OnValidSubmit="UserLogin">
+            <EditForm Model="@User">
                 <DataAnnotationsValidator />
                 <div class="mb-3">
                     <label class="form-label" for="username">Användarnamn:</label>
@@ -39,9 +39,9 @@
 
                 <h3 class="text-center text-danger mb-5">@message</h3>
 
-                <button class="btn btn-warning me-2" type="submit">Logga in</button>
+                <button class="btn btn-warning me-2" type="submit" @onclick="UserLogin">Login</button>
 
-                <button class="btn btn-primary" @onclick="UserRegister">Registrera ny användare</button>
+                <button class="btn btn-primary" @onclick="UserRegister">Register new user</button>
             </EditForm>
         </div>
     </div>

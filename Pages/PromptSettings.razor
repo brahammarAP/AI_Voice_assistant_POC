@@ -24,41 +24,41 @@
                 @if (card.CardPlacement <= 3)
                 {
                     <div class="col-12 col-md-6" @onclick="() => StartChat(card)">
-                        <a  class="text-decoration-none text-black">
                             <div class="card mb-3 bg-@card.CardColor m-auto" style="max-width: 20rem">
-                                <img src="@card.CardImage"
-                                     class="card-img-top"
-                                     alt="@card.CardImageAlt" />
-                                <div class="card-body">
-                                    <h5 class="card-title text-@card.HeadingTextColor fs-3">
-                                        @card.CardHeading
-                                    </h5>
-                                    <p class="card-text fs-5">
-                                        @card.CardText
-                                    </p>
-                                </div>
+                                <a role="button" class="text-decoration-none text-black">
+                                    <img src="@card.CardImage"
+                                         class="card-img-top"
+                                         alt="@card.CardImageAlt" />
+                                    <div class="card-body">
+                                        <h5 class="card-title text-@card.HeadingTextColor fs-3">
+                                            @card.CardHeading
+                                        </h5>
+                                        <p class="card-text fs-5">
+                                            @card.CardText
+                                        </p>
+                                    </div>
+                                </a>
                             </div>
-                        </a>
                     </div>
                 }
                 @if (card.CardPlacement > 3)
                 {
                     <div class="col-12 col-md-6 mt-md-5" @onclick="() => StartChat(card)">
-                        <a  class="text-decoration-none text-black">
                             <div class="card mb-3 bg-@card.CardColor m-auto" style="max-width: 20rem">
-                                <img src="@card.CardImage"
-                                     class="card-img-top"
-                                     alt="@card.CardImageAlt" />
-                                <div class="card-body">
-                                    <h5 class="card-title text-@card.HeadingTextColor fs-3">
-                                        @card.CardHeading
-                                    </h5>
-                                    <p class="card-text fs-5">
-                                        @card.CardText
-                                    </p>
-                                </div>
+                                <a role="button" class="text-decoration-none text-black">
+                                    <img src="@card.CardImage"
+                                         class="card-img-top"
+                                         alt="@card.CardImageAlt" />
+                                    <div class="card-body">
+                                        <h5 class="card-title text-@card.HeadingTextColor fs-3">
+                                            @card.CardHeading
+                                        </h5>
+                                        <p class="card-text fs-5">
+                                            @card.CardText
+                                        </p>
+                                    </div>
+                                </a>
                             </div>
-                        </a>
                     </div>
                 }
             }
