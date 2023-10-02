@@ -11,10 +11,19 @@
     <article class="row mb-5">
         <div class="col card me-md-2 border-0 @hideElement" @onclick="() => StartWizard()">
             <a role="button">
-                <div class="d-flex card-header bg-white border-0 justify-content-center">
-                    <img src="images/building.svg"
+                <div class="d-flex card-header bg-white border-0 justify-content-center align-content-center">
+                    <div class="d-flex flex-column">
+                       <img src="images/SpeakBotNoText.gif"
+                        class="img-fluid"
+                        alt="Speakbot logo" />
+                        <img src="images/SpeakBotText.gif"
+                             class="img-fluid"
+                             alt="Speakbot animated text" />
+                    </div>
+
+                    @*                     <img src="images/building.svg"
                          class="img-fluid w-75 "
-                         alt="School logo" />
+                         alt="School logo" /> *@
                 </div>
                 <div class="card-body">
                     <h1 class="fs-6">
