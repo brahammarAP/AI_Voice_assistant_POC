@@ -9,28 +9,31 @@
 
 <div class="container"> 
     <article class="row mb-5">
-        <div class="col card me-md-2 border-0 @hideElement" @onclick="() => StartWizard()">
+        <div class="col card me-md-2 border-0 justify-content-center align-content-center mx-auto @hideElement" @onclick="() => StartWizard()">
             <a role="button">
-                <div class="d-flex card-header bg-white border-0 justify-content-center align-content-center">
-                    <div class="d-flex flex-column">
-                       <img src="images/SpeakBotNoText.gif"
+                <div class="d-flex flex-column card-header bg-white border-0 ">
+                    <div class="d-flex flex-column w-75">
+                        <img src="/images/robot_start.svg"
+                        class="img-fluid"
+                        alt="Speakbot start image" />
+@*                         <img src="images/SpeakBotNoText.gif"
                         class="img-fluid"
                         alt="Speakbot logo" />
                         <img src="images/SpeakBotText.gif"
                              class="img-fluid"
-                             alt="Speakbot animated text" />
+                             alt="Speakbot animated text" /> *@
                     </div>
 
-                    @*                     <img src="images/building.svg"
+@*                                          <img src="images/building.svg"
                          class="img-fluid w-75 "
-                         alt="School logo" /> *@
+                         alt="School logo" />  *@
                 </div>
                 <div class="card-body">
                     <h1 class="fs-6">
                         Begin a captivating journey with our app! Dive into endless knowledge explorations. Discover. Grow. Start today!
                     </h1>
                     <div class="m-0">
-                        Start with our premade Wizards here!
+                        <span class="fw-bold">Start</span> here!
                         <span class="fs-3 fw-bold">&rarr;</span>
                     </div>
                 </div>
