@@ -18,14 +18,14 @@ public interface IUserSession
 
 public class UserSession : IUserSession
 {
-    private readonly ICookieStoreAPIService cookieStore;
+    private readonly ICookieAPIService cookieStore;
     public User User { get; set; } = new User();
     public ChatHistory CurrentChat { get; set; } = new ChatHistory();
     public PromptCard PromptCard { get; set; } = new PromptCard();
     public string? Key { get; set; }
     public string? Reigion { get; set; }
 
-    public UserSession(IConfiguration configuration, ICookieStoreAPIService cookieStore)
+    public UserSession(IConfiguration configuration, ICookieAPIService cookieStore)
     {
         Key = configuration.GetSection("Azure:SpeechServiceKey").Value;
         Reigion = configuration.GetSection("Azure:SpeechServiceLocation").Value;

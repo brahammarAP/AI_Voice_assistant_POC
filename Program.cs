@@ -15,7 +15,7 @@ builder.Services.AddSingleton(builder.Configuration);
 builder.Services
     .AddSingleton<IAzureAiChatServices, AzureAiChatServices>()
     .AddSingleton<IUserSession, UserSession>()
-    .AddSingleton<ICookieStoreAPIService, CookieStoreAPIService>();
+    .AddSingleton<ICookieAPIService, CookieAPIService>();
 
 builder.Services
     .AddScoped<ILocalStorageAPI, LocalStorageAPIService>()
