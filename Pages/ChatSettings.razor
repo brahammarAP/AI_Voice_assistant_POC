@@ -6,9 +6,16 @@
 
 <PageTitle>Chat settings</PageTitle>
 
-<h3 class="settings-title text-center mt-2">Chat settings</h3>
 
 <div class="text-center mx-auto gap-2 pt-2">
+    @* Border är inte ställd i bredd med korten *@
+    <div class="container" style="max-width: 540px">
+        <div class="row mb-3 justify-content-center align-content-center" >
+            <h2 class="border-start border-success border-5 rounded-1 fs-4 fw-semibold mb-3 text-center mt-2  ">
+                Chat History
+            </h2>
+        </div>
+    </div>
     <div class="d-flex flex-column justify-content align-content-center gap-4 mt-5 mx-auto">
         <div class="col-12 col-md-6 justify-content-center align-content-center mx-auto" @onclick="DeleteChat">
             <article class="card mb-3 m-auto"
