@@ -14,7 +14,7 @@
             <EditForm Model="@User">
                 <DataAnnotationsValidator />
                 <div class="mb-3">
-                    <label class="form-label" for="username">Användarnamn:</label>
+                    <label class="form-label" for="username">Username:</label>
                     <InputText 
                         class="form-control" 
                         id="username" 
@@ -28,7 +28,7 @@
                     <ValidationMessage For="@(() => User.Username)" />
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="password">Lösenord</label>
+                    <label class="form-label" for="password">Password:</label>
                     <InputText 
                         type="password" 
                         id="password" 
