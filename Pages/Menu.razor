@@ -12,17 +12,24 @@
     <article class="row mb-5">
         <div class="col card me-md-2 border-0 @hideElement" @onclick="() => StartWizard()">
             <a role="button">
-                <div class="d-flex card-header bg-white border-0 justify-content-center">
-                    <img src="images/building.svg"
+                @*  *@
+                <div class="d-flex flex-column card-header border-0 justify-content-center align-items-center bg-white pb-5" style="background-image: url('/images/BigSky(4) - kopia.jpg'); background-size: cover;background-position:50% 50%;">
+                    <div class="d-flex flex-column mt-4" >
+                        <img src="/images/robot_start.svg"
+                             class="img-fluid "
+                        alt="Speakbot logo" />
+                    </div>
+
+@*                                          <img src="images/building.svg"
                          class="img-fluid w-75 "
-                         alt="School logo" />
+                         alt="School logo" />  *@
                 </div>
-                <div class="card-body">
-                    <h1 class="fs-6">
-                        Begin a captivating journey with our app! Dive into endless knowledge explorations. Discover. Grow. Start today!
+                <div class="card-body justify-content-center align-items-center">
+                    <h1 class="fs-6 mt-4 mx-auto">
+                        Begin a captivating journey with our app! Dive into endless knowledge explorations. <span class="fst-italic">Discover. Grow.</span> Start today!
                     </h1>
                     <div class="m-0">
-                        Start with our premade Wizards here!
+                        <span class="fw-bold">Start</span> here!
                         <span class="fs-3 fw-bold">&rarr;</span>
                     </div>
                 </div>
@@ -43,7 +50,7 @@
                     in one Chat Settings to start new chat.</h2>
             </div>
         }
-        <div class="col card d-none d-md-block ms-md-2 border-0">
+       @*  <div class="col card d-none d-md-block ms-md-2 border-0">
             <a role="button">
                 <div class="card-body d-flex justify-content-center">
                     <img src="images/cutecat.gif"
@@ -51,7 +58,7 @@
                          alt="Cute Cat gid" />
                 </div>
             </a>
-        </div>
+        </div> *@
     </article>
 
     <div class="row mb-3">
@@ -64,7 +71,7 @@
     @if (userChatHistory == null || userChatHistory.Count() == 0)
     {
         <div class="row text-center text-danger mt-5">
-            <h2 class="fs-2">You have no search history yet!</h2>
+            <h2 class="fs-2">You have no chat history yet!</h2>
         </div>
     }
     else
