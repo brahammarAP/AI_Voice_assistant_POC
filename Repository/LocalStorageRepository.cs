@@ -1,6 +1,5 @@
 ﻿using SpeakBot.Repository.IRepository;
 using SpeakBot.Services;
-
 using System.Linq.Expressions;
 
 namespace SpeakBot.Repository;

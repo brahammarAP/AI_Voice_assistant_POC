@@ -1,6 +1,7 @@
 ﻿@inject IUserSession session;
 @inject IMessageService messageService;
 @inject IJSRuntime JSRuntime;
+@implements IDisposable;
 
 <div class="card-header border-0 border-danger border-bottom p-3"
      style="background-color: #f0f0f0">
@@ -61,17 +62,28 @@
     {
         CardHeading = session.CurrentChat.CardHeading ?? session.PromptCard.CardHeading;
         chatExists = (session.CurrentChat.Id != Guid.Empty) ? true : false;
-        messageService.OnAddChat += async () => { chatExists = true; StateHasChanged(); };
-        messageService.OnChatUpdate += async () => { chatExists = true; StateHasChanged(); };
+        messageService.OnNewChat += HandleChatUpdate;
+        messageService.OnChatUpdate += UpdateHeading;
     }
 
     void UpdateHeading()
     {
         CardHeading = session.CurrentChat.CardHeading;
-        chatExists = (session.CurrentChat.Id != Guid.Empty) ? true : false;
+        StateHasChanged();
+    }
+
+    private void HandleChatUpdate()
+    {
+        chatExists = true;
         StateHasChanged();
     }
 
     async Task StopSpeech()
          => await JSRuntime.InvokeAsync<object>("Interop.StopPlay");
+
+    public void Dispose()
+    {
+        messageService.OnNewChat += HandleChatUpdate;
+        messageService.OnChatUpdate += UpdateHeading;
+    }
 }
