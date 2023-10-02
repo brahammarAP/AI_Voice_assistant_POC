@@ -1,34 +1,11 @@
-      //"vad",
-      //"hur",
-      //"finns",
-      //"varför",
-      //"kan",
-      //"vem",
-      //"vilket"
-
 {
   "QuestionStarterWords": [
-    {
-      "sv-SE": [
-        "vad",
-        "hur",
-        "finns",
-        "varför",
-        "kan",
-        "vem",
-        "vilket"
-      ]
-    },
-    {
-      "en-US": [
-        "vad",
-        "hur",
-        "finns",
-        "varför",
-        "kan",
-        "vem",
-        "vilket"
-      ]
-    }
+    "vad",
+    "hur",
+    "finns",
+    "varför",
+    "kan",
+    "vem",
+    "vilket"
   ]
 }
