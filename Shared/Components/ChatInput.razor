@@ -8,6 +8,7 @@
 @inject IConfiguration Configuration;
 @inject HttpClient Http;
 @inject NavigationManager NavManager;
+@implements IDisposable;
 
 <div class="card-footer p-1 border-0 "
      style="background-color: #f0f0f0">
@@ -68,11 +69,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        MessageService.OnChatUpdate += async () => { LoadMessages(); };
-        await LoadMessages();
+        MessageService.OnChatUpdate += LoadMessages;
+        LoadMessages();
     }
 
-    async Task LoadMessages()
+    async void LoadMessages()
     {
         chatMessages = Session.CurrentChat.Prompts;
         currentChat = Session.CurrentChat;
@@ -165,7 +166,7 @@
         var storedHistory = await ChatHistory.GetAllAsync() ?? new List<ChatHistory>();
 
         if (storedHistory.Count() > 5) await ChatHistory.RemoveItemWhenMoreThanFive(storedHistory.ToList());
- 
+
     }
 
     private async Task GetAiVoice(Message request)
@@ -215,7 +216,7 @@
                 CardImage = Session.PromptCard.CardImage,
                 SystemMessage = Session.PromptCard.SystemText
             };
-        
+
             storedHistory.Add(newHistory);
         }
         else
@@ -225,10 +226,10 @@
 
         await ChatHistory.CreateAsync(storedHistory);
 
-        MessageService.SendMessage(chatMessages);
+        MessageService.MessageUpdate(chatMessages);
 
         if(chatMessages.Count < 2)
-            MessageService.AddChat();
+            MessageService.NewChat();
     }
 
     private async Task Resize(ChangeEventArgs e)
@@ -238,5 +239,10 @@
         var result = await JSRuntime.InvokeAsync<object>("blazorExtensions.AdjustInputField");
 
         Double.TryParse(result.ToString(), out var MyHeight);
+    }
+
+    public void Dispose()
+    {
+        MessageService.OnChatUpdate -= LoadMessages;
     }
 }

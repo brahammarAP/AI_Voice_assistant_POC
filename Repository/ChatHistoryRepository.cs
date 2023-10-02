@@ -59,8 +59,7 @@ public class ChatHistoryRepository : LocalStorageRepository<ChatHistory>, IChatH
 
         await SaveAsync(newChatHistory);
 
-        messageService.OnChatDelete();
-
+        messageService.DeleteChat();
     }
 }
 

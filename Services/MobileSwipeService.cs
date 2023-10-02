@@ -52,22 +52,19 @@ public class MobileSwipeService : IMobileSwipeService
             if (diffX > 0)
                 await SwipeLeft(chatId);
             if (diffX > 0)
-                return;
+                await SwipeRight();
         }
     }
 
     async Task SwipeLeft(Guid chatId)
     {
-        // Swipe left = ändra på css så knapp blir synlig
-        // Om knapp är synlig så akriveras ankare för delte
-        // skall detta ankare vara kopplat till Swipeservi
         await chatHistory.DeleteAsync(x => x.Id == chatId);
 
-        await messageService.OnChatDelete();
+        messageService.DeleteChat();
     }
 
     async Task SwipeRight()
     {
-
+        return;
     }
 }
