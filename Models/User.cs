@@ -13,6 +13,8 @@ public class User
     [Required]
     [RegularExpression(@"^[a-zA-Z0-9!@#$%^&*()_+=,.?-]{2,50}$", ErrorMessage = "Invalid characters.")]
     public string Password { get; set; }
+    public string UserImage { get; set; } = "cacti";
+    public string Language { get; set; } = "sv-SE";
 
     public User()
     {

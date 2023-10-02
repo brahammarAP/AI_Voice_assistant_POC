@@ -8,7 +8,7 @@
         style="background-color: #f0f0f0"
         id="chatcontainer">
 
-    @if (chatMessages == null || chatMessages.Count() == 0)
+    @if (!chatMessages?.Any() ?? true)
     {
         <div class="text-center mt-5 text-success">@message</div>
     }
@@ -58,7 +58,7 @@
                     <div class="row">
                         <div class="flexbox-container d-flex flex justify-content-start flex-row-reverse mb-4 gap-1 mx-auto">
                             <div class="svg-container text-danger">
-                                <svg xmlns="http://www.w3.org/2000/svg"
+                                @* <svg xmlns="http://www.w3.org/2000/svg"
                                         width="24px"
                                         height="24px"
                                         fill="currentColor"
@@ -67,7 +67,8 @@
                                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
                                     <path fill-rule="evenodd"
                                             d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
-                                </svg>
+                                </svg> *@
+                                <img src="images/avatar/cacti.svg" style="width:3rem;height:3rem;" />
                             </div>
                             <div class="chat-message p-3 me-2 border rounded-3 bg-white border-3 border-danger">
                                 <p class="small mb-0 text-wrap">
@@ -86,7 +87,7 @@
 
 @code {
     private List<Message> chatMessages;
-    string message = "Starta en konversation genom att spela in ett röstmeddelande eller skriv här nedan...";
+    string message = "Start a conversation by recording a voice message or typing here below...";
 
     protected override async Task OnInitializedAsync()
     {

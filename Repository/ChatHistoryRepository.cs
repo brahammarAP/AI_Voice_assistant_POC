@@ -7,8 +7,10 @@ namespace SpeakBot.Repository;
 
 public class ChatHistoryRepository : LocalStorageRepository<ChatHistory>, IChatHistoryRepository
 {
-    public ChatHistoryRepository(IConfiguration configuration, ILocalStorageAPI localStorageAPI) : base(configuration, localStorageAPI)
+    private readonly IMessageService messageService;
+    public ChatHistoryRepository(IConfiguration configuration, ILocalStorageAPI localStorageAPI, IMessageService messageService) : base(configuration, localStorageAPI)
     {
+        this.messageService = messageService;
     }
 
     public async Task<ChatHistory> FavoriseAsync(Expression<Func<ChatHistory, bool>>? filter = null)
@@ -57,7 +59,9 @@ public class ChatHistoryRepository : LocalStorageRepository<ChatHistory>, IChatH
 
         await SaveAsync(newChatHistory);
 
-        }
+        messageService.OnChatDelete();
+
+    }
 }
 
 

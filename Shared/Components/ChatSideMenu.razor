@@ -58,6 +58,7 @@
         await LoadHistory();
 
         messageService.OnAddChat += async () => { LoadHistory(); };
+        messageService.OnDeleteChat += async () => { LoadHistory(); };
     }
 
     async Task LoadHistory()
