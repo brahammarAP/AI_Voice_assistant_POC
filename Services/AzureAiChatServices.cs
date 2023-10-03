@@ -80,6 +80,11 @@ public class AzureAiChatServices : IAzureAiChatServices
                 // Hanterar andra Azure API request-fel här
                 return new Message("API request failed", false);
             }
+            catch (Exception ex)
+            {
+                // Hanterar connection-fel här
+                return new Message("Connection error", false);
+            }
         }
     }
 }

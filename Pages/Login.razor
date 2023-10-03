@@ -1,9 +1,11 @@
 @page "/login"
+@using System.ComponentModel.DataAnnotations;
 @layout NoHeaderLayout;
 @inject ILocalStorageAPI LocalStorage;
 @inject IConfiguration Configuration;
 @inject ICookieAPIService CookieStore;
 @inject IUserSession Session;
+@inject ICryptoService Crypto;
 
 <PageTitle>Login</PageTitle>
 
@@ -48,25 +50,27 @@
 </div>
 
 @code {
-    private User User = new();
+    private UserDetails User = new();
+
     private string message = string.Empty;
 
     private async Task UserLogin()
     {
         User getUser = new();
 
-        var storedUsers = await LocalStorage.GetItemAsync<List<User>>(Configuration["UserSettings:UserStorageLocation"]);
+        var storedUsers = await LocalStorage.GetItemAsync<List<User>>(Configuration["UserSettings:UserStorageLocation"]) ?? null;
 
-        if (storedUsers != null) 
+        if (storedUsers != null)
             getUser = storedUsers.FirstOrDefault(x => x.Username == User.Username);
 
-        if (getUser != null && getUser.Username == User.Username && getUser.Password == User.Password)
+        if (getUser != null && getUser.Username == User.Username && await Crypto.DecryptAsync(getUser.Password) == User.Password)
         {
             await SetCookie(getUser);
         }
         else
         {
             message = "User not found";
+            User.Password = "";
         }
     }
 
@@ -77,13 +81,16 @@
         if (storedUsers.FirstOrDefault(x => x.Username == User.Username) != null)
         {
             message = "Username already exists";
+            User.Password = "";
             return;
         }
+
+        CryptoResult encrypted = await Crypto.EncryptAsync(User.Password);
 
         var newUser = new User()
         {
             Username = User.Username,
-            Password = User.Password
+            Password = encrypted.Value
         };
 
         storedUsers.Add(newUser);
@@ -117,5 +124,15 @@
         Session.User.Id = user.Id;
 
         navManager.NavigateTo("/menu");
+    }
+
+    private class UserDetails
+    {
+        [Required]
+        [RegularExpression(@"^[a-zA-Z0-9!@#$%^&*()_+=,.?-]{2,50}$", ErrorMessage = "Invalid characters.")]
+        public string Username { get; set; }
+        [Required]
+        [RegularExpression(@"^[a-zA-Z0-9!@#$%^&*()_+=,.?-]{2,50}$", ErrorMessage = "Invalid characters.")]
+        public string Password { get; set; }
     }
 }

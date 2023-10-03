@@ -1,9 +1,6 @@
 ﻿@page "/"
 @layout NoHeaderLayout
-@inject ICookieAPIService cookieStore;
 @inject IUserSession session;
-@inject IConfiguration configuration;
-@inject IJSRuntime JS;
 
 <PageTitle>Välkommen</PageTitle>
 
@@ -36,7 +33,7 @@
                 {
                     <a type="button"
                        href="/menu"
-                       class="btn btn-warning btn-lg px-4 me-md-2 w-75 mt-4 m-auto fw-bold @hideElement">
+                       class="btn btn-warning btn-lg px-4 me-md-2 w-75 mt-4 m-auto fw-bold">
                         Go explore with AI &rarr;
                     </a>
                 }
@@ -44,14 +41,9 @@
                 {
                     <a type="button"
                        href="/login"
-                       class="btn btn-warning btn-lg px-4 me-md-2 w-75 mt-4 m-auto fw-bold @hideElement">
+                       class="btn btn-warning btn-lg px-4 me-md-2 w-75 mt-4 m-auto fw-bold">
                         Sign In &rarr;
                     </a>
-                }
-                @if (incompatibleBrowser)
-                {
-                    <h2 class="@incompatibleBrowser text-danger mt-2">Please use Chrome or Microsoft Edge</h2>
-
                 }
             </div>
         </div>
@@ -60,8 +52,6 @@
 
 @code{
     private bool isLogged;
-    private bool incompatibleBrowser = false;
-    private string hideElement = null;
 
     protected override async Task OnInitializedAsync()
     {
