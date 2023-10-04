@@ -5,13 +5,13 @@
 @inject IMessageService messageService;
 @implements IDisposable;
 
-<div class="card-body position-relative modal-dialog-scrollable overflow-auto px-3"
+<div class="card-body position-relative modal-dialog-scrollable overflow-auto p-0 py-5"
         style="background-color: #f0f0f0"
         id="chatcontainer">
 
     @if (!chatMessages?.Any() ?? true)
     {
-        <div class="text-center mt-5 text-success">@message</div>
+        <div class="text-center mt-5 px-3 text-success">@message</div>
     }
     else
     {
@@ -21,7 +21,7 @@
             { 
                 <div class="container">
                     <div class="row">
-                        <div class="flexbox-container d-flex flex justify-content-end flex-row-reverse mb-4 gap-1 mx-auto">
+                        <div class="d-flex col-lg-10 col-xl-8 justify-content-end flex-row-reverse mb-4 mx-auto pe-5">
                             <div class="chat-response p-3 ms-2 border rounded-3 bg-white border-3 border-warning">
                                 <p class="small mb-2 text-wrap">
                                     @((MarkupString)Regex.Replace(
@@ -49,7 +49,7 @@
             {
                 <div class="container">
                     <div class="row">
-                        <div class="flexbox-container d-flex flex justify-content-start flex-row-reverse mb-4 gap-1 mx-auto">
+                        <div class="d-flex col-lg-10 col-xl-8 justify-content-start flex-row-reverse mb-4 mx-auto ps-5">
                             <div class="svg-container text-danger">
                                 <img src="images/avatar/cacti.svg" style="width:3rem;height:3rem;" />
                             </div>
