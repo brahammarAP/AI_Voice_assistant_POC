@@ -4,7 +4,7 @@
 @inject IJSRuntime JSRuntime;
 @implements IDisposable;
 
-<div class="d-flex flex-column flex-shrink-0 d-none d-md-block p-3 border-end border-grey overflow-hidden justify-content-center" style="width: 380px;">
+<div class="d-flex flex-column vh-100">
     <div class="row justify-content-center">
         <img src="images/cloud.svg" class="w-50" />
     </div>
@@ -22,8 +22,7 @@
         {
             <div class="row">
                 <div class="col" @onclick="() => GoToChat(chat)">
-                    <article class="card mb-3 m-auto"
-                             style="max-width: 540px">
+                    <article class="card mb-3 m-auto">
                         <a role="button"
                            class="text-decoration-none text-black">
                             <div class="row g-0">
