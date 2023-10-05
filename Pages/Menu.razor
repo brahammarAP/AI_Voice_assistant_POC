@@ -1,5 +1,4 @@
 ﻿@page "/menu"
-@inject ICookieAPIService CookieStore;
 @inject IUserSession Session;
 @inject IMobileSwipeService Swipe;
 @inject IChatHistoryRepository ChatHistory;
@@ -51,7 +50,6 @@
             Chat History
         </h2>
     </div>
-
 
     @if (userChatHistory == null || userChatHistory.Count() == 0)
     {

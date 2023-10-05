@@ -102,10 +102,7 @@
         StateHasChanged();
     }
 
-    void OnChatUpdate()
-    {
-        LoadMessages();
-    }
+    void OnChatUpdate() => LoadMessages();
 
     void ReloadMessages(IEnumerable<Message>? messages)
     {
