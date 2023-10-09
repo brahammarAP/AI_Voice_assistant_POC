@@ -76,6 +76,11 @@
 
     private async Task UserRegister()
     {
+        if (string.IsNullOrEmpty(User.Username) || string.IsNullOrEmpty(User.Password))
+        {
+            return;
+        }
+
         var storedUsers = await LocalStorage.GetItemAsync<List<User>>(Configuration["UserSettings:UserStorageLocation"]) ?? new List<User>();
 
         if (storedUsers.FirstOrDefault(x => x.Username == User.Username) != null)

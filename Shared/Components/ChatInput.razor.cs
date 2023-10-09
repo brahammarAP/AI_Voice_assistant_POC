@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.JSInterop;
 using SpeakBot.Models;
 using SpeakBot.Repository.IRepository;
@@ -29,6 +30,7 @@ public partial class ChatInput
     protected override async Task OnInitializedAsync()
     {
         MessageService.OnChatUpdate += LoadMessages;
+        navManager.LocationChanged += StopSpeech;
         LoadMessages();
     }
 
@@ -76,7 +78,7 @@ public partial class ChatInput
 
                 if (result == null)
                 {
-                    SaveChat(new Message("You need to say something!", true));
+                    SaveChat(new Message("Oops, I forgot to say something!", true));
                     ModalDialog.Close();
                     isDisabled = false;
                     return;
@@ -209,8 +211,21 @@ public partial class ChatInput
         Double.TryParse(result.ToString(), out var MyHeight);
     }
 
+    private void StopSpeech(object sender, LocationChangedEventArgs e)
+    {
+        try
+        {
+            JSRuntime.InvokeAsync<object>("Interop.StopPlay");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error stopping playback: " + ex.Message);
+        }
+    }
+
     public void Dispose()
     {
         MessageService.OnChatUpdate -= LoadMessages;
+        navManager.LocationChanged -= StopSpeech;
     }
 }
