@@ -1,7 +1,9 @@
 ﻿@inject IUserSession session;
-@inject IJSRuntime JSRuntime
-@inject NavigationManager navManager
-@inject INavigationServices navServices
+@inject IJSRuntime JSRuntime;
+@inject NavigationManager navManager;
+@inject INavigationServices navServices;
+@inject IMessageService MessageService;
+@implements IDisposable;
 
 <header class="header-section my-3 p-3 mx-xxl-5 px-xxl-5" style="background-color: #f0f0f0">
     <div class="d-flex justify-content-between align-items-center">
@@ -79,6 +81,8 @@
             if (await session.IsLoggedIn())
                 username = session.User.Username;
         }
+
+        MessageService.OnDeleteChat += IsNotChatSettings;
     }
 
     void GoToMenu()
@@ -91,11 +95,18 @@
     void IsNotChatSettings()
     {
         navServices.ToggleChatSettings(false);
+
+        StateHasChanged();
     }
 
     private async Task GoBack()
     {
         await JSRuntime.InvokeVoidAsync("history.back");
         IsNotChatSettings();
+    }
+
+    public void Dispose()
+    {
+        MessageService.OnDeleteChat -= IsNotChatSettings;
     }
 }
