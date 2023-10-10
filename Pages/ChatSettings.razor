@@ -3,6 +3,7 @@
 @inject IChatHistoryRepository ChatHistory;
 @inject NavigationManager navManager;
 @inject INavigationServices navServices;
+@inject IMessageService MessageService;
 
 <PageTitle>Chat settings</PageTitle>
 
@@ -123,6 +124,10 @@
     public async Task DeleteChat()
     {
         await ChatHistory.DeleteAsync(x => x.Id == session.CurrentChat.Id);
+
+        navServices.ToggleChatSettings(false);
+
+        MessageService.DeleteChat();
 
         navManager.NavigateTo("/menu");
     }
